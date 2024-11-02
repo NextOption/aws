@@ -2,11 +2,11 @@ package main
 
 import (
 	"context"
-	"github.com/aws/aws-sdk-go/aws/request"
 	"sync"
 
 	fake "github.com/NextOption/aws/lambda"
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/request"
 	"github.com/aws/aws-sdk-go/aws/session"
 	real "github.com/aws/aws-sdk-go/service/lambda"
 )

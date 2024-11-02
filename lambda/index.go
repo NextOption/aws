@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/aws/aws-sdk-go/aws/request"
-
 	real "github.com/aws/aws-sdk-go/service/lambda"
 )
 
