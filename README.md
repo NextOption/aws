@@ -27,21 +27,24 @@ Supported Interface:
 3. [ ] `InvokeAsync(input *InvokeAsyncInput) (*InvokeAsyncOutput, error)` (in progress)
 
 Sample code:
-
 ```go
- if enableFakeLambda {
-  InitFakeLambda(
-   fake.WithFunction(lambdaFn1Name, handleFn1),
-   fake.WithFunction(fn2Name, handleFn2),
-  )
- } else {
-  InitAWSLambda()
- }
- // invoke lambda_fn_1
- // lambda_fn_1 return nothing so we just skip it
- _, err := GetServerless().Invoke(&real.InvokeInput{
-  FunctionName: &lambdaFn1Name,
- })
+	if enableFakeLambda {
+		InitFakeLambda(
+			fake.WithFunction(lambdaFn1Name, handleFn1),
+			fake.WithFunction(fn2Name, handleFn2),
+		)
+	} else {
+		InitAWSLambda()
+	}
+	// invoke lambda_fn_1
+	// lambda_fn_1 return nothing so we just skip it
+	_, err := GetServerless().Invoke(&real.InvokeInput{
+		FunctionName: &lambdaFn1Name,
+	})
+	if err != nil {
+		fmt.Printf("error when invoke lambda 1: %v", err)
+		return
+	}
 ```
 
 Check the [example/lambda](example/lambda) folder for more information.
