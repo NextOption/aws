@@ -1,6 +1,8 @@
 package main
 
 import (
+	"context"
+	"github.com/aws/aws-sdk-go/aws/request"
 	"sync"
 
 	fake "github.com/NextOption/aws/lambda"
@@ -11,6 +13,7 @@ import (
 
 type Serverless interface {
 	Invoke(in *real.InvokeInput) (out *real.InvokeOutput, err error)
+	InvokeWithContext(ctx context.Context, in *real.InvokeInput, opts ...request.Option) (*real.InvokeOutput, error)
 }
 
 var (

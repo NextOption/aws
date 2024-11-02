@@ -105,6 +105,26 @@ func main() {
 		fmt.Println("result: ", orderProcessResult)
 	}
 
+	invokeOutput, err = GetServerless().InvokeWithContext(context.TODO(), &real.InvokeInput{
+		FunctionName: &fn2Name,
+		Payload:      inputPayload,
+	})
+
+	if err != nil {
+		fmt.Printf("error when invoke lambda 2: %v", err)
+		return
+	}
+
+	if invokeOutput != nil && invokeOutput.Payload != nil {
+		orderProcessResult := OrderProcessResult{}
+		err = json.Unmarshal(invokeOutput.Payload, &orderProcessResult)
+		if err != nil {
+			fmt.Println("error when unmarshal output: ", err)
+			return
+		}
+		fmt.Println("result: ", orderProcessResult)
+	}
+
 }
 
 // real main for lambda will be like following
