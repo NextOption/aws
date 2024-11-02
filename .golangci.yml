@@ -1,0 +1,4 @@
+issues:
+  exclude-dirs:
+    - vendor
+    - example
