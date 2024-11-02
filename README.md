@@ -10,17 +10,21 @@ But now they come with Premium Plan (-__-!) and provide cloud services.
 We are here with you, the next option of AWS, LocalStack._
 
 ## Feature
+
 * Support for local development for RealAWS services.
 * Become a Localstack alternative.
 * Ready to live on production as a backup for RealAWS.
 
 ### Lambda
+
 Just inject our fake lambda inside your code and you are ready to go.
 It has the same interface as AWS Lambda but run in your code.
 
 Supported Interface:
+
 1. [x] `Invoke(input *InvokeInput) (*InvokeOutput, error)`
-2. [ ] `InvokeAsync(input *InvokeAsyncInput) (*InvokeAsyncOutput, error)` (in progress)
+2. [x] InvokeWithContext(aws.Context, *lambda.InvokeInput, ...request.Option) (*lambda.InvokeOutput, error)
+3. [ ] `InvokeAsync(input *InvokeAsyncInput) (*InvokeAsyncOutput, error)` (in progress)
 
 Sample code:
 ```go
@@ -37,8 +41,10 @@ Sample code:
 	_, err := GetServerless().Invoke(&real.InvokeInput{
 		FunctionName: &lambdaFn1Name,
 	})
+	if err != nil {
+		fmt.Printf("error when invoke lambda 1: %v", err)
+		return
+	}
 ```
 
 Check the [example/lambda](example/lambda) folder for more information.
-
-
