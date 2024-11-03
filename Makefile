@@ -3,3 +3,7 @@ install-golangci-lint:
 
 lint:
 	$(CURDIR)/golangci-lint run --verbose
+
+test:
+	@echo "Running tests with coverage..."
+	@go test -race -cover ./...

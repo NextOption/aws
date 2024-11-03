@@ -4,7 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
 	fake "github.com/NextOption/aws/lambda"
+	"github.com/aws/aws-sdk-go/aws"
 	real "github.com/aws/aws-sdk-go/service/lambda"
 )
 
@@ -124,9 +126,8 @@ func main() {
 		fmt.Println("result: ", orderProcessResult)
 	}
 
-	event := real.InvocationTypeEvent
 	invokeOutput, err = GetServerless().InvokeWithContext(context.TODO(), &real.InvokeInput{
-		InvocationType: &event,
+		InvocationType: aws.String(real.InvocationTypeEvent),
 		FunctionName:   &fn2Name,
 		Payload:        inputPayload,
 	})
