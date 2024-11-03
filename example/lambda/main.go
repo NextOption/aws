@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-
 	fake "github.com/NextOption/aws/lambda"
 	real "github.com/aws/aws-sdk-go/service/lambda"
 )
@@ -123,6 +122,18 @@ func main() {
 			return
 		}
 		fmt.Println("result: ", orderProcessResult)
+	}
+
+	event := real.InvocationTypeEvent
+	invokeOutput, err = GetServerless().InvokeWithContext(context.TODO(), &real.InvokeInput{
+		InvocationType: &event,
+		FunctionName:   &fn2Name,
+		Payload:        inputPayload,
+	})
+
+	if err != nil {
+		fmt.Printf("error when invoke lambda 2: %v", err)
+		return
 	}
 
 }
