@@ -3,10 +3,14 @@ package lambda
 import (
 	"context"
 	"fmt"
-
 	"github.com/aws/aws-sdk-go/aws/request"
 	real "github.com/aws/aws-sdk-go/service/lambda"
 )
+
+// isAsyncInvoke checks if the input is async invoke
+func isAsyncInvoke(input real.InvokeInput) bool {
+	return input.InvocationType != nil && *input.InvocationType == real.InvocationTypeEvent
+}
 
 // FuncHandler is a longest function as the input for lambda.
 // present for func (context.Context, TIn) (TOut, error)
@@ -55,17 +59,7 @@ func (f *Fake) validateInput(in *real.InvokeInput) error {
 
 // Invoke invokes the lambda function-same signature as real lambda
 func (f *Fake) Invoke(in *real.InvokeInput) (out *real.InvokeOutput, err error) {
-	if err := f.validateInput(in); err != nil {
-		return nil, err
-	}
-	handler := f.mpLambdaFunc[*in.FunctionName]
-	payload, err := handler(context.TODO(), in.Payload)
-	if err != nil {
-		return nil, err
-	}
-	return &real.InvokeOutput{
-		Payload: payload,
-	}, nil
+	return f.InvokeWithContext(context.TODO(), in)
 }
 
 // InvokeWithContext invokes the lambda function-same signature as real lambda
@@ -74,6 +68,14 @@ func (f *Fake) InvokeWithContext(ctx context.Context, in *real.InvokeInput, opts
 		return nil, err
 	}
 	handler := f.mpLambdaFunc[*in.FunctionName]
+	if isAsyncInvoke(*in) {
+		go func() {
+			_, _ = handler(context.TODO(), in.Payload)
+		}()
+		return &real.InvokeOutput{
+			StatusCode: &StatusCode202,
+		}, nil
+	}
 	payload, err := handler(ctx, in.Payload)
 	if err != nil {
 		return nil, err
@@ -82,3 +84,13 @@ func (f *Fake) InvokeWithContext(ctx context.Context, in *real.InvokeInput, opts
 		Payload: payload,
 	}, nil
 }
+
+// InvokeAsync, InvokeAsyncWithContext invokes the lambda function-same signature as real lambda
+// Deprecated: InvokeAsync has been deprecated in aws api https://docs.aws.amazon.com/lambda/latest/api/API_InvokeAsync.html
+// So we skip it. Refer to Invoke to invoke asynchronously
+// func (f *Fake) InvokeAsync(input *real.InvokeAsyncInput) (*real.InvokeAsyncOutput, error){}
+// }
+
+// Deprecated https://docs.aws.amazon.com/lambda/latest/api/API_InvokeAsync.html
+// func (f *Fake ) InvokeAsyncWithContext(aws.Context, *lambda.InvokeAsyncInput, ...request.Option) (*lambda.InvokeAsyncOutput, error){
+// }

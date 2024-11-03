@@ -19,12 +19,14 @@ We are here with you, the next option of AWS, LocalStack._
 
 Just inject our fake lambda inside your code and you are ready to go.
 It has the same interface as AWS Lambda but run in your code.
+Only provide basic functions to Invoke now. It's enough for most of the cases that we just need to invoke lambda.
 
 Supported Interface:
 
 1. [x] `Invoke(input *InvokeInput) (*InvokeOutput, error)`
-2. [x] InvokeWithContext(aws.Context, *lambda.InvokeInput, ...request.Option) (*lambda.InvokeOutput, error)
-3. [ ] `InvokeAsync(input *InvokeAsyncInput) (*InvokeAsyncOutput, error)` (in progress)
+2. [x] `InvokeWithContext(aws.Context, *lambda.InvokeInput, ...request.Option) (*lambda.InvokeOutput, error)`
+3. [x] `InvokeAsync` & `InvokeAsyncWithContext` deprecated by aws but supported by `Invoke` or `InvokeWithContext`
+4. [ ] Other APIs are not supported yet.
 
 Sample code:
 ```go
@@ -48,3 +50,6 @@ Sample code:
 ```
 
 Check the [example/lambda](example/lambda) folder for more information.
+
+### SQS (in progress)
+Just try to implement simple queue by go channel.
